@@ -21,6 +21,7 @@
 #pragma once
 
 #include <calibu/cam/CameraRig.h>
+#include <calibu/utils/Xml.h>
 #include <sstream>
 
 namespace calibu
@@ -114,8 +115,25 @@ CameraModelAndTransform ReadXmlCameraModelAndTransform(const std::string& filena
 
 void WriteXmlRig(std::ostream& out, const CameraRig& rig, int indent = 0);
 void WriteXmlRig(const std::string& filename, const CameraRig& rig);
-//CameraRig ReadXmlRig(TiXmlNode* xmlrig);
-CameraRig ReadXmlRig(const std::string& filename);
+
+////////////////////////////////////////////////////////////////////////
+
+CameraRig ReadXmlRig(TiXmlNode* xmlrig);
+
+template<typename Scalar=double>
+CameraRigT<Scalar> ReadXmlRig(const std::string& filename)
+{
+    TiXmlDocument doc;
+    if(doc.LoadFile(filename)) {
+        TiXmlNode* pNode = doc.FirstChild(NODE_RIG);
+        if(pNode) {
+            return ReadXmlRig(pNode).template Cast<Scalar>();
+        }
+    }else{
+        std::cerr << doc.ErrorDesc() << ": '" << filename << "'" << std::endl;
+    }
+    return CameraRigT<Scalar>();
+}
 
 
 }

@@ -271,18 +271,6 @@ CameraRig ReadXmlRig(TiXmlNode* xmlrig)
     return rig;
 }
 
-CameraRig ReadXmlRig(const std::string& filename)
-{
-    TiXmlDocument doc;
-    if(doc.LoadFile(filename)) {
-        TiXmlNode* pNode = doc.FirstChild(NODE_RIG);
-        if(pNode) {
-            return ReadXmlRig(pNode);
-        }
-    }else{
-        std::cerr << doc.ErrorDesc() << ": '" << filename << "'" << std::endl;
-    }
-    return CameraRig();
-}
+
 
 }
