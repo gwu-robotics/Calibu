@@ -57,20 +57,24 @@ typedef CameraRigT<double> CameraRig;
 
 //////////////////////////////////////////////////////////////////////////////
 
-static const Sophus::SO3d RdfVision =
-        Sophus::SO3d( (Eigen::Matrix3d() << 1,0,0, 0,1,0, 0,0,1).finished() );
 
-static const Sophus::SO3d RdfRobotics =
-//        Sophus::SO3d( (Eigen::Matrix3d() << 0,1,0, 0,0,1, 1,0,0).finished() );
-        Sophus::SO3d( (Eigen::Matrix3d() << 0,0,1, 1,0,0, 0,1,0).finished() );
+template<typename Scalar=double>
+static const Sophus::SO3d RdfVisionT() { return Sophus::SO3Group<Scalar>( (Eigen::Matrix<Scalar,3,3>() << 1,0,0, 0,1,0, 0,0,1).finished() ); }
+static const Sophus::SO3d RdfVision = RdfVisionT<double>();
+
+
+template<typename Scalar=double>
+static const Sophus::SO3d RdfRoboticsT() { return Sophus::SO3Group<Scalar>( (Eigen::Matrix<Scalar,3,3>() << 0,0,1, 1,0,0, 0,1,0).finished() ); }
+static const Sophus::SO3d RdfRobotics = RdfRoboticsT<double>();
 
 // T_2b_1b = T_ba * T_2a_1a * T_ab
-inline Sophus::SE3d ToCoordinateConvention(
-        const Sophus::SE3d& T_2a_1a,
-        const Sophus::SO3d& R_ba
+template<typename Scalar=double>
+inline Sophus::SE3Group<Scalar> ToCoordinateConvention(
+        const Sophus::SE3Group<Scalar>& T_2a_1a,
+        const Sophus::SO3Group<Scalar>& R_ba
         )
 {
-    Sophus::SE3d T_2b_1b;
+    Sophus::SE3Group<Scalar> T_2b_1b;
     T_2b_1b.so3() = R_ba * T_2a_1a.so3() * R_ba.inverse();
     T_2b_1b.translation() = R_ba * T_2a_1a.translation();
     return T_2b_1b;

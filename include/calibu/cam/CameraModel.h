@@ -54,7 +54,7 @@ template<typename Scalar=double>
 inline CameraModelInterfaceT<Scalar>* CameraModelFactory( const std::string sModelName )
 {
     if ( sModelName == "calibu_id" ){
-        return new CameraModelT<Pinhole,Scalar>();
+        return new CameraModelT<ProjectionLinear<DistortionPinholeT<Scalar>,Scalar>,Scalar>();
     }else if( sModelName == "calibu_f_u0_v0") {
         return new CameraModelT<ProjectionLinearSquare<DistortionPinholeT<Scalar>, Scalar >,Scalar >();
     }else if( sModelName == "calibu_fu_fv_u0_v0") {
@@ -92,13 +92,13 @@ public:
     }
     
     CameraModelGeneric( const CameraModelInterfaceT<Scalar>& rhs )
-        : m_pCam( CameraModelFactory( rhs.Type() ) )
+        : m_pCam( CameraModelFactory<Scalar>( rhs.Type() ) )
     {
         CopySameType(rhs);
     }
     
     CameraModelGeneric( std::string& sModelType)
-        : m_pCam( CameraModelFactory( sModelType ) )
+        : m_pCam( CameraModelFactory<Scalar>( sModelType ) )
     {
     }
 

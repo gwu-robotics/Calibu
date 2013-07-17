@@ -164,7 +164,7 @@ CameraModelGeneric<Scalar> ReadXmlCameraModel(TiXmlElement* pEl)
 }
 
 template<typename Scalar=double>
-Sophus::SE3d ReadXmlSE3(TiXmlNode* xmlcampose)
+Sophus::SE3Group<Scalar> ReadXmlSE3(TiXmlNode* xmlcampose)
 {
     const std::string val = xmlcampose->FirstChildElement("T_wc")->GetText();
     Eigen::Matrix<Scalar,4,4> m = StrToVal<Eigen::Matrix<Scalar,4,4>>(val);

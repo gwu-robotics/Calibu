@@ -94,7 +94,7 @@ namespace calibu
                     const Vector3t& P //< Input:
                     ) const
             {
-                return CameraModelT<ProjectionModel>::dMap_dP(P,data());
+                return CameraModelT<ProjectionModel,Scalar>::dMap_dP(P,data());
             }
 
             /////////////////////////////////////////////////////////////////////////
@@ -280,12 +280,12 @@ namespace calibu
                 return ret;
             }
 
-            Eigen::VectorXd GenericParams() const
+            VectorXt GenericParams() const
             {
                 return m_params;
             }
 
-            void SetGenericParams(const Eigen::VectorXd& params)
+            void SetGenericParams(const VectorXt& params)
             {
                 m_params = params;
             }
