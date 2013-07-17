@@ -51,20 +51,6 @@ public:
         cop.T_wc = T_wc;
         cameras.push_back(cop);
     }
-    template<typename Other=double>
-    CameraRigT<Other> Cast() const
-    {
-        CameraRigT<Other> rigT;
-        rigT.cameras.reserve(cameras.size());
-        for(CameraModelAndTransformT<Scalar> c : cameras){
-            CameraModelAndTransformT<Other> otherModel;
-            otherModel.T_wc = c.T_wc.template cast<Other>();
-            otherModel.camera = c.camera.Cast<Other>();
-            rigT.cameras.push_back(otherModel);
-        }
-        return rigT;
-    }
-    
     std::vector<CameraModelAndTransformT<Scalar> > cameras;
 };
 typedef CameraRigT<double> CameraRig;

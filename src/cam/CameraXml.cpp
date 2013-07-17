@@ -97,46 +97,7 @@ void WriteXmlCameraModel(const std::string& filename, const CameraModelInterface
     WriteXmlCameraModel(of, cam);
 }
 
-CameraModel ReadXmlCameraModel(TiXmlElement* pEl)
-{    
-    std::string sType = CameraModelType( pEl->Attribute("type"));
-    
-    CameraModel rCam( sType );
-    if(rCam.IsInitialized()) {
-        std::string sVer    = pEl->Attribute("version");
-        std::string sName   = pEl->Attribute("name");
-        std::string sIndex  = pEl->Attribute("index");
-        std::string sSerial = pEl->Attribute("serialno");
-        
-        TiXmlElement* xmlp = pEl->FirstChildElement("params");
-        TiXmlElement* xmlw = pEl->FirstChildElement("width");
-        TiXmlElement* xmlh = pEl->FirstChildElement("height");
-        TiXmlElement* xmlRight = pEl->FirstChildElement("right");
-        TiXmlElement* xmlDown = pEl->FirstChildElement("down");
-        TiXmlElement* xmlForward = pEl->FirstChildElement("forward");
 
-        std::string sParams = xmlp ? xmlp->GetText() : "";
-        std::string sWidth  = xmlw ? xmlw->GetText() : "";
-        std::string sHeight = xmlh ? xmlh->GetText() : "";
-        std::string sR = xmlRight ? xmlRight->GetText() : "[ 1; 0; 0 ]";
-        std::string sD = xmlDown ? xmlDown->GetText() : "[0; 1; 0 ]";
-        std::string sF = xmlForward ? xmlForward->GetText() : "[ 0; 0; 1 ]";
-
-        rCam.SetVersion( StrToVal<int>(sVer,0) );
-        rCam.SetName( sName );
-        rCam.SetIndex( StrToVal<int>(sIndex,0) );
-        rCam.SetSerialNumber( StrToVal<int>(sSerial,-1) );
-        rCam.SetGenericParams( StrToVal<Eigen::VectorXd>(sParams, rCam.GenericParams()) );
-        rCam.SetImageDimensions( StrToVal<int>(sWidth), StrToVal<int>(sHeight) );
-        Eigen::Matrix3d rdf;
-        rdf.col(0) = StrToVal<Eigen::Vector3d>(sR);
-        rdf.col(1) = StrToVal<Eigen::Vector3d>(sD);
-        rdf.col(2) = StrToVal<Eigen::Vector3d>(sF);
-        rCam.SetRDF( rdf );
-    }
-    
-    return rCam;
-}
 
 CameraModel ReadXmlCameraModel(const std::string& filename)
 {
@@ -206,23 +167,6 @@ void WriteXmlCameraModelAndTransform(const std::string& filename, const CameraMo
 }
 
 
-CameraModelAndTransform ReadXmlCameraModelAndTransform(TiXmlNode* xmlcampose)
-{
-    CameraModelAndTransform cop;
-    
-    TiXmlElement* xmlcam  = xmlcampose->FirstChildElement(NODE_CAMMODEL);
-    if(xmlcam) {
-        cop.camera = ReadXmlCameraModel(xmlcam);
-    }
-    
-    TiXmlNode* xmlpose = xmlcampose->FirstChild(NODE_POSE);
-    if(xmlpose) {
-        cop.T_wc = ReadXmlSE3(xmlpose);
-    }   
- 
-    return cop;
-}
-
 CameraModelAndTransform ReadXmlCameraModelAndTransform(const std::string& filename)
 {
     TiXmlDocument doc;
@@ -256,20 +200,6 @@ void WriteXmlRig(const std::string& filename, const CameraRig& rig)
 }
 
 
-CameraRig ReadXmlRig(TiXmlNode* xmlrig)
-{
-    CameraRig rig;
-    
-    for( TiXmlNode* child = xmlrig->FirstChild(NODE_CAMMODEL_POSE); child; child = child->NextSibling(NODE_CAMMODEL_POSE) )
-    {
-        CameraModelAndTransform cap = ReadXmlCameraModelAndTransform(child);
-        if(cap.camera.IsInitialized()) {
-            rig.cameras.push_back(cap);
-        }
-    }    
-    
-    return rig;
-}
 
 
 

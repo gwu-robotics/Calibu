@@ -446,20 +446,6 @@ namespace calibu
                 m_sName = sName;
             }
 
-            template<typename Other=double>
-            std::shared_ptr<CameraModelInterfaceT<Other>> Cast() const
-            {
-                std::shared_ptr<CameraModelInterfaceT<Other>> pCam(new CameraModelT<Other>());
-                pCam->m_nWidth = m_nWidth;
-                pCam->m_nHeight = m_nHeight;
-                pCam->m_params = m_params.template cast<Other>();
-                pCam->m_sName = m_sName;
-                pCam->m_nVersion = m_nVersion;
-                pCam->m_nSerialNo = m_nSerialNo;
-                pCam->m_nIndex = m_nIndex;
-                pCam->m_RDF = m_RDF.template cast<Other>();
-                return pCam;
-            }
 
         protected:
 

@@ -45,8 +45,6 @@ public:
     // Virtual member functions
     virtual ~CameraModelInterfaceT(){}
 
-//    template<typename Other=double>
-//    std::shared_ptr<CameraModelInterfaceT<Other>> Cast() const;
 
     /// Map from image coordinates to z=1 plane.
     virtual Vector2t Map(

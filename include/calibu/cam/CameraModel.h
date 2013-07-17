@@ -102,14 +102,6 @@ public:
     {
     }
 
-    template<typename Other=double>
-    CameraModelGeneric<Other> Cast()
-    {
-        CameraModelGeneric<Other> camT;
-        camT.m_pCam = dynamic_cast<CameraModelT>(m_pCam->get())->Cast<Other>();
-        return camT;
-    }
-    
     /////////////////////////////////////////////////////////////////////////
     // Member functions
     /////////////////////////////////////////////////////////////////////////
