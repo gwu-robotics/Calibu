@@ -70,7 +70,7 @@ calibu::CameraModelAndTransform MvlToCalibu( const mvl::CameraModel& mvlcam )
     CamAndPose.camera.SetName( mvlcam.GetModel()->name );
     CamAndPose.camera.SetSerialNumber( mvlcam.GetModel()->serialno );
     CamAndPose.camera.SetIndex( mvlcam.GetModel()->index );
-    CamAndPose.camera.SetVersion( calibu::CAMRERA_MODEL_VERSION );
+    CamAndPose.camera.SetVersion( calibu::CAMERA_MODEL_VERSION );
     CamAndPose.camera.SetRDF( mvlcam.RDF().transpose() );
     CamAndPose.T_wc = Sophus::SE3d( mvlcam.GetPose() );
 
