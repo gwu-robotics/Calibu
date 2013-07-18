@@ -192,13 +192,14 @@ public:
     // Transfer point correspondence with known inv. depth to secondary camera frame.
     // Points at infinity are supported (rho = 0)
     inline Vector2t Transfer(
+            const CameraModelInterfaceT<Scalar>& refCam,
             const SE3t& T_ba,  //< Input:
             const Vector2t& pa, //< Input:
             const Scalar rho           //< Output:
             ) const
     {
         // rho*Pa (undo distortion, unproject, avoid division by inv depth)
-        const Vector3t rhoPa = UnmapUnproject(pa);
+        const Vector3t rhoPa = refCam.UnmapUnproject(pa);
         return Transfer3D(T_ba, rhoPa, rho);
     }
  
@@ -206,6 +207,7 @@ public:
     // Transfer point correspondence with known inv. depth to secondary camera frame.
     // Points at infinity are supported (rho = 0)
     inline Vector2t Transfer(
+            const CameraModelInterfaceT<Scalar>& refCam,
             const SE3t& T_ba,  //< Input:
             const Vector2t& pa, //< Input:
             const Scalar rho,          //< Input:
@@ -213,7 +215,7 @@ public:
             ) const
     {
         // rho*P1 (undo distortion, unproject, avoid division by inv depth)
-        const Vector3t rhoPa = UnmapUnproject(pa);
+        const Vector3t rhoPa = refCam.UnmapUnproject(pa);
         return Transfer3D(T_ba, rhoPa, rho, in_front);
     }
 };
