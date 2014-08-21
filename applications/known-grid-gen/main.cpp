@@ -21,12 +21,13 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  const double grid_spacing = 0.03156; // m
-  const double small_rad = 0.00635; // m
-  const double large_rad = 0.00889; // m
+  // 72 points per inch as defined by postscript / 2.54 cm per inch
+  const double pts_per_unit = 72. / 2.54;
+  const double grid_spacing = 3.156; // cm
+  const double small_rad = 0.635; // cm
+  const double large_rad = 0.889; // cm
 
   const Eigen::Vector2d offset(0,0);
-  double pts_per_unit = 650;
   calibu::TargetGridDot target(grid_spacing, GoogleLargeGrid());
   target.SaveEPS(output, offset, small_rad, large_rad, pts_per_unit);
 
