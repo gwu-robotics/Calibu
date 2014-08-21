@@ -12,4 +12,7 @@ if(NOT ANDROID)
     include_directories(${Sophus_INCLUDE_DIR} ${Calibu_INCLUDE_DIRS})
     add_executable(grid_gen grid-gen/main.cpp)
     target_link_libraries(grid_gen calibu)
+
+    add_executable(known_grid_gen known-grid-gen/main.cpp)
+    target_link_libraries(known_grid_gen calibu)
 endif()

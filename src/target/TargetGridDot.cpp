@@ -587,9 +587,7 @@ void TargetGridDot::SaveEPS(
         unsigned char id
         ) const
 {
-    Eigen::MatrixXi M = GetBinaryPattern(2);
-    rad0 = 0.003;
-    rad1 = 0.005;
+    Eigen::MatrixXi M = GetBinaryPattern(0);
 
     const double border = 3*rad1;
     const Eigen::Vector2d border2d(border,border);
@@ -603,17 +601,19 @@ void TargetGridDot::SaveEPS(
     f << "%!PS-Adobe EPSF-3.0" << std::endl;
     f << "%%Creator: CalibuCalibrationTarget" << std::endl;
     f << "%%Title: Calibration Target" << std::endl;
+    // ps 0,0 origin is located in the bottom left corner
     f << "%%Origin: 0 0" << std::endl;
-    // usletter BoundingBox is 0, 0, 612, 792
+    // usletter BoundingBox is 0, 0, 612, 792 pts (72 pts per inch)
     f << "%%BoundingBox: 0 0 " << max_pts[0] << " " << max_pts[1] << std::endl;
     f << std::endl;
-    f << "270 rotate 0 " << -max_pts[0] << " 0 translate" << std::endl;
 
     for( int r=0; r<M.rows(); ++r ) {
+        int rpos = M.rows() - r - 1;
         for( int c=0; c<M.cols(); ++c) {
             const double rad_pts = pts_per_unit * ((M(r,c) == 1) ? rad1 : rad0);
-            const Eigen::Vector2d p_pts = pts_per_unit* (offset + border2d + grid_spacing * Eigen::Vector2d(c,r));
-            f << p_pts[0] << " " << max_pts[1] - p_pts[1] << " "
+            const Eigen::Vector2d p_pts = pts_per_unit *
+                (offset + border2d + grid_spacing * Eigen::Vector2d(c,rpos));
+            f << p_pts[0] << " " << p_pts[1] << " "
                 << rad_pts << " 0 360 arc closepath" << std::endl
                 << "0.0 setgray fill" << std::endl
                 << std::endl;
