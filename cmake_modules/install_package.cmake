@@ -102,7 +102,7 @@ function(install_package)
             endif()
             get_target_property( _target_library ${PACKAGE_LIB_NAME} LOCATION )
             get_filename_component( _lib ${_target_library} NAME )
-            list( APPEND PACKAGE_LINK_LIBS ${PACKAGE_LIB_NAME} )
+            list( INSERT PACKAGE_LINK_LIBS 0 ${PACKAGE_LIB_NAME} )
         endif()
 
         if( PACKAGE_INSTALL_HEADER_DIRS )
@@ -141,10 +141,19 @@ function(install_package)
 
         # install library itself
         if( PACKAGE_LIB_NAME )
-            install( FILES ${_target_library} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
+
+			if(MSVC)
+				string(REPLACE "$(Configuration)" "\${BUILD_TYPE}" _target_library ${_target_library})
+			endif()
+
+            install( TARGETS ${PACKAGE_LIB_NAME}
+                RUNTIME DESTINATION bin
+                LIBRARY DESTINATION lib
+                ARCHIVE DESTINATION lib
+                )
             set( PACKAGE_LIB_LINK "-l${PACKAGE_LIB_NAME}" )
         endif()
-    
+
         # build pkg-config file
         if( PACKAGE_PKG_NAME )
             configure_file( ${modules_dir}/PkgConfig.pc.in ${PACKAGE_PKG_NAME}.pc @ONLY )
@@ -195,7 +204,7 @@ function(install_package)
               cmake_policy( SET CMP0026 OLD )
             endif()
             get_target_property( _target_library ${PACKAGE_LIB_NAME} LOCATION )
-            list( APPEND PACKAGE_LINK_LIBS ${_target_library} )
+            list( INSERT PACKAGE_LINK_LIBS 0 ${_target_library} )
         endif()
 
         if( PACKAGE_INSTALL_HEADER_DIRS )

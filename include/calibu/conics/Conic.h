@@ -46,6 +46,8 @@ struct Conic {
 
   // center (c1,c2)
   Eigen::Vector2d center;
+  Eigen::Vector3d center_undistorted;
+  double radius;
 };
 
 CALIBU_EXPORT

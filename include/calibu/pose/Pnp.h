@@ -23,18 +23,20 @@
 
 #include <vector>
 #include <sophus/se3.hpp>
+#include <calibu/Platform.h>
 #include <calibu/cam/camera_crtp.h>
 
 namespace calibu {
 
-    std::vector<int> PosePnPRansac(
+    std::vector<int> CALIBU_EXPORT PosePnPRansac(
         const std::shared_ptr<CameraInterface<double>> cam,
         const std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d> > & img_pts,
         const std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > & ideal_pts,
         const std::vector<int> & candidate_map,
         int robust_3pt_its,
         float robust_3pt_tol,
-        Sophus::SE3d * T
+        Sophus::SE3d * T,
+        bool calibrate = false
         );
 
     double ReprojectionErrorRMS(

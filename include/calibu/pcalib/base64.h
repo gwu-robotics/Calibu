@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <vector>
 #include <Eigen/Eigen>
 
 #include <iostream>

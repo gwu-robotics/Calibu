@@ -37,8 +37,8 @@ struct ParamsImageProcessing {
   bool black_on_white;
 };
 
-CALIBU_EXPORT
-class ImageProcessing {
+
+class CALIBU_EXPORT ImageProcessing {
  public:
   ImageProcessing(int maxWidth, int maxHeight);
   ~ImageProcessing();
