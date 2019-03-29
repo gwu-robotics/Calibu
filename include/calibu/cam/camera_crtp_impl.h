@@ -48,7 +48,7 @@ class CameraImpl : public CameraInterface<Scalar> {
 
   CameraImpl() {}
   virtual ~CameraImpl() {}
-  CameraImpl(const Eigen::VectorXd& params, Eigen::Vector2i& image_size) :
+  CameraImpl(const Eigen::VectorXd& params, const Eigen::Vector2i& image_size) :
       CameraInterface<Scalar>(params, image_size) {
   }
 
