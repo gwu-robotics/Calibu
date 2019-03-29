@@ -118,7 +118,7 @@ SET(SOURCES
 ## Find required dependencies
 find_package( Eigen3 REQUIRED )
 find_package( Sophus REQUIRED )
-find_package( GLog REQUIRED )
+find_package( GLog CONFIG REQUIRED )
 
 find_package(TinyXML2 REQUIRED)
 list(APPEND CALIBU_INC ${TinyXML2_INCLUDE_DIRS} )
@@ -192,7 +192,7 @@ endif()
 
 # build calibu library
 add_library( calibu ${SOURCES} )
-target_link_libraries( calibu ${LINK_LIBS} )
+target_link_libraries( calibu ${LINK_LIBS} glog::glog)
 
 # install everything
 install_package(
@@ -219,4 +219,3 @@ endif()
  add_custom_target(uninstall
      COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
  ###########################
-
