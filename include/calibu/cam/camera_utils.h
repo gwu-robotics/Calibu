@@ -148,6 +148,7 @@ class LinearCamera : public CameraImpl<Scalar, 4, LinearCamera<Scalar> > {
   typedef CameraImpl<Scalar, 4, LinearCamera<Scalar> > Base;
  public:
   using Base::Base;
+  using Base::Scale;
 
   static constexpr int NumParams = 4;
 
@@ -211,4 +212,3 @@ class LinearCamera : public CameraImpl<Scalar, 4, LinearCamera<Scalar> > {
 };
 
 }//end namespace calibu
-
