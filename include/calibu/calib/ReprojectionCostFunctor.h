@@ -48,8 +48,8 @@ struct ReprojectionCostFunctor
             ) const
     {
         Eigen::Map<Eigen::Matrix<T,2,1> > r(residuals);
-        const Eigen::Map<const Sophus::SE3Group<T> > T_kw(pT_kw);
-        const Eigen::Map<const Sophus::SE3Group<T> > T_ck(pT_ck);
+        const Eigen::Map<const Sophus::SE3<T> > T_kw(pT_kw);
+        const Eigen::Map<const Sophus::SE3<T> > T_ck(pT_ck);
 
         const Eigen::Matrix<T,3,1> Pc = T_ck * (T_kw * m_Pw.cast<T>());
         Eigen::Matrix<T,2,1> pc;

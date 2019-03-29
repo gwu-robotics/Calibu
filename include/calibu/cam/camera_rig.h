@@ -41,12 +41,12 @@ static const Sophus::SO3d RdfRobotics =
 
 // T_2b_1b = T_ba * T_2a_1a * T_ab
 template<typename Scalar=double>
-inline Sophus::SE3Group<Scalar> ToCoordinateConvention(
-        const Sophus::SE3Group<Scalar>& T_2a_1a,
-        const Sophus::SO3Group<Scalar>& R_ba
+inline Sophus::SE3<Scalar> ToCoordinateConvention(
+        const Sophus::SE3<Scalar>& T_2a_1a,
+        const Sophus::SO3<Scalar>& R_ba
         )
 {
-    Sophus::SE3Group<Scalar> T_2b_1b;
+    Sophus::SE3<Scalar> T_2b_1b;
     T_2b_1b.so3() = R_ba * T_2a_1a.so3() * R_ba.inverse();
     T_2b_1b.translation() = R_ba * T_2a_1a.translation();
     return T_2b_1b;
@@ -55,14 +55,14 @@ inline Sophus::SE3Group<Scalar> ToCoordinateConvention(
 template<typename Scalar=double>
 inline std::shared_ptr<Rig<double>> ToCoordinateConvention(
     const std::shared_ptr<Rig<double>>& rig,
-    const Sophus::SO3Group<Scalar>& rdf
+    const Sophus::SO3<Scalar>& rdf
   )
 {
   std::shared_ptr<calibu::Rig<Scalar>> ret(new calibu::Rig<Scalar>());
   *ret = *rig;
   for(size_t c=0; c<ret->NumCams(); ++c) {
-    const Sophus::SO3Group<Scalar> M =
-        rdf * Sophus::SO3Group<Scalar>(rig->cameras_[c]->RDF()).inverse();
+    const Sophus::SO3<Scalar> M =
+        rdf * Sophus::SO3<Scalar>(rig->cameras_[c]->RDF()).inverse();
     ret->cameras_[c]->SetPose(ToCoordinateConvention(rig->cameras_[c]->Pose(), M));
     ret->cameras_[c]->SetRDF(rdf.matrix());
   }

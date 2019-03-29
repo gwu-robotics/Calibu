@@ -40,7 +40,7 @@ protected:
   typedef Eigen::Matrix<Scalar, 2, 1> Vec2t;
   typedef Eigen::Matrix<Scalar, 3, 1> Vec3t;
   typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> VecXt;
-  typedef Sophus::SE3Group<Scalar> SE3t;
+  typedef Sophus::SE3<Scalar> SE3t;
 
 public:
   CameraInterface() {}
