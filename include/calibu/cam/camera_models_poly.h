@@ -38,6 +38,7 @@ class FovCamera : public CameraImpl<Scalar, 5, FovCamera<Scalar> > {
   typedef CameraImpl<Scalar, 5, FovCamera<Scalar> > Base;
  public:
   using Base::Base;
+  using Base::Scale, Base::K, Base::Unproject, Base::Project, Base::dProject_dparams, Base::dUnproject_dparams, Base::dProject_dray;
 
   static constexpr int NumParams = 5;
 
