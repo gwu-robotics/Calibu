@@ -52,6 +52,12 @@ class CameraImpl : public CameraInterface<Scalar> {
       CameraInterface<Scalar>(params, image_size) {
   }
 
+  /** Clone a camera model, useful when camera type is not known at compile time */
+  virtual std::shared_ptr<CameraInterface<Scalar>>
+  Clone() {
+      return std::make_shared<Derived>(static_cast<const Derived&>(*this));
+  };
+
   void
   Scale(const Scalar& s) override {
     Derived::Scale( s, this->params_.data() );

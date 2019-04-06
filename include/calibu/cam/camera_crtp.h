@@ -50,6 +50,9 @@ public:
 
   virtual ~CameraInterface() {}
 
+  /** Clone a camera model, useful when camera type is not known at compile time */
+  virtual std::shared_ptr<CameraInterface<Scalar>> Clone() = 0;
+
   /** Change camera model image size. */
   virtual void Scale( const Scalar& s ) = 0;
 
