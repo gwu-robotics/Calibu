@@ -25,6 +25,9 @@
 */
 
 #pragma once
+
+#include <calibu/cam/camera_crtp_impl.h>
+
 namespace calibu {
 struct CameraUtils {
   /** Euclidean distance from (0, 0) to given pixel */
