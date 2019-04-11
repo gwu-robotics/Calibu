@@ -41,6 +41,7 @@ class Rational6Camera : public CameraImpl<Scalar, 10, Rational6Camera<Scalar> > 
   typedef CameraImpl<Scalar, 10, Rational6Camera<Scalar> > Base;
  public:
   using Base::Base;
+  using Base::Scale, Base::K, Base::Unproject, Base::Project, Base::dProject_dparams, Base::dUnproject_dparams, Base::dProject_dray;
 
   static constexpr int NumParams = 10;
 

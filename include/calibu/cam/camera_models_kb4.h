@@ -41,6 +41,7 @@ class KannalaBrandtCamera : public CameraImpl<Scalar, 8, KannalaBrandtCamera<Sca
   typedef CameraImpl<Scalar, 8, KannalaBrandtCamera<Scalar> > Base;
  public:
   using Base::Base;
+  using Base::Scale, Base::K, Base::Unproject, Base::Project, Base::dProject_dparams, Base::dUnproject_dparams, Base::dProject_dray;
 
   static constexpr int NumParams = 8;
 

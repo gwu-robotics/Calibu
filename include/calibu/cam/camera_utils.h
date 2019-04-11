@@ -25,6 +25,9 @@
 */
 
 #pragma once
+
+#include <calibu/cam/camera_crtp_impl.h>
+
 namespace calibu {
 struct CameraUtils {
   /** Euclidean distance from (0, 0) to given pixel */
@@ -148,6 +151,7 @@ class LinearCamera : public CameraImpl<Scalar, 4, LinearCamera<Scalar> > {
   typedef CameraImpl<Scalar, 4, LinearCamera<Scalar> > Base;
  public:
   using Base::Base;
+  using Base::Scale, Base::K, Base::Unproject, Base::Project, Base::dProject_dparams, Base::dUnproject_dparams, Base::dProject_dray;
 
   static constexpr int NumParams = 4;
 
@@ -211,4 +215,3 @@ class LinearCamera : public CameraImpl<Scalar, 4, LinearCamera<Scalar> > {
 };
 
 }//end namespace calibu
-

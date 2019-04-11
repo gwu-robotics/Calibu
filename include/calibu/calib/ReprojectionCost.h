@@ -46,8 +46,8 @@ struct ReprojectionCost
     bool Evaluate(T const* const* parameters, T* residuals) const
     {
         Eigen::Map<Eigen::Matrix<T,2,1> > r(residuals);
-        const Eigen::Map<const Sophus::SE3Group<T> > T_kw(parameters[0]);
-        const Eigen::Map<const Sophus::SE3Group<T> > T_ck(parameters[1]);
+        const Eigen::Map<const Sophus::SE3<T> > T_kw(parameters[0]);
+        const Eigen::Map<const Sophus::SE3<T> > T_ck(parameters[1]);
         T const* camparam = parameters[2];
 
         const Eigen::Matrix<T,3,1> Pc = T_ck * (T_kw * m_Pw.cast<T>());

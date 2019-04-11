@@ -359,16 +359,16 @@ bool TargetGridDot::Match(std::map<Eigen::Vector2i const, Vertex*,
 //        if( num_matches == 1 )
         {
             // Found unique match
-            Sophus::SE2Group<int> T_0x[4] = {
-                Sophus::SE2Group<int>(Sophus::SO2Group<int>(1,0), Eigen::Vector2i(0,0) ),
-                Sophus::SE2Group<int>(Sophus::SO2Group<int>(0,1), Eigen::Vector2i(grid_size_[0]-1,0) ),
-                Sophus::SE2Group<int>(Sophus::SO2Group<int>(-1,0), Eigen::Vector2i(grid_size_[0]-1,grid_size_[1]-1) ),
-                Sophus::SE2Group<int>(Sophus::SO2Group<int>(0,-1), Eigen::Vector2i(0,grid_size_[1]-1) )
+            Sophus::SE2<int> T_0x[4] = {
+                Sophus::SE2<int>(Sophus::SO2<int>(1,0), Eigen::Vector2i(0,0) ),
+                Sophus::SE2<int>(Sophus::SO2<int>(0,1), Eigen::Vector2i(grid_size_[0]-1,0) ),
+                Sophus::SE2<int>(Sophus::SO2<int>(-1,0), Eigen::Vector2i(grid_size_[0]-1,grid_size_[1]-1) ),
+                Sophus::SE2<int>(Sophus::SO2<int>(0,-1), Eigen::Vector2i(0,grid_size_[1]-1) )
             };
 
-            Sophus::SE2Group<int> T_xm(Sophus::SO2Group<int>(), Eigen::Vector2i(bc,br));
+            Sophus::SE2<int> T_xm(Sophus::SO2<int>(), Eigen::Vector2i(bc,br));
 
-            Sophus::SE2Group<int> T_0m = T_0x[bg] * T_xm;
+            Sophus::SE2<int> T_0m = T_0x[bg] * T_xm;
 
             for(auto i = obs.begin(); i != obs.end(); ++i) {
                 i->second->pg = T_0m * i->second->pg;

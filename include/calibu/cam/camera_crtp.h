@@ -40,7 +40,7 @@ protected:
   typedef Eigen::Matrix<Scalar, 2, 1> Vec2t;
   typedef Eigen::Matrix<Scalar, 3, 1> Vec3t;
   typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> VecXt;
-  typedef Sophus::SE3Group<Scalar> SE3t;
+  typedef Sophus::SE3<Scalar> SE3t;
 
 public:
   CameraInterface() {}
@@ -49,6 +49,9 @@ public:
           image_size_(other.image_size_), params_(other.params_) {}
 
   virtual ~CameraInterface() {}
+
+  /** Clone a camera model, useful when camera type is not known at compile time */
+  virtual std::shared_ptr<CameraInterface<Scalar>> Clone() = 0;
 
   /** Change camera model image size. */
   virtual void Scale( const Scalar& s ) = 0;
