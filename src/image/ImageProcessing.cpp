@@ -24,6 +24,8 @@
 #include <calibu/image/IntegralImage.h>
 #include <calibu/image/Label.h>
 
+#include <opencv2/imgproc/imgproc.hpp>
+
 namespace calibu {
 
 ImageProcessing::ImageProcessing(int maxWidth, int maxHeight)
@@ -65,9 +67,14 @@ void ImageProcessing::Process(const unsigned char* greyscale_image,
     memcpy(&I[0], greyscale_image, img_size);
   }
 
+
+  cv::Mat dst(h, w, cv::DataType<unsigned char>::type, &tI[0]);
+
+  cv::Mat input_test(h, w, cv::DataType<unsigned char>::type, &I[0]);
+
   // Process image
   gradient<>(width, height, &I[0],  &dI[0]);
-  integral_image(width, height, &I[0], &intI[0] );
+  /*integral_image(width, height, &I[0], &intI[0] );
 
   // Threshold image
   AdaptiveThreshold(
@@ -76,10 +83,76 @@ void ImageProcessing::Process(const unsigned char* greyscale_image,
       (unsigned char)0, (unsigned char)255
                     );
 
+  cv::Mat dst2;
+
+  cv::Mat dst3(h, w, cv::DataType<unsigned char>::type);
+
+  auto clahe = cv::createCLAHE();
+  clahe->setClipLimit(8);
+  clahe->setTilesGridSize(cv::Size(2, 2));
+
+  clahe->apply(input_test, input_test);
+
+  cv::Mat dst_intI(h, w, cv::DataType<float>::type);
+
+  cv::Mat dst_intI_test(h, w, cv::DataType<float>::type, &intI[0]);
+
+  integral_image(width, height, &I[0], &intI[0]);
+
+  AdaptiveThreshold(
+      width, height, &I[0], &intI[0], dst3.data, params.at_threshold,
+      width / params.at_window_ratio, 20,
+      (unsigned char)0, (unsigned char)255
+  );*/
+
+  cv::adaptiveThreshold(input_test, dst, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 127, 4);
+
+  //gradient<>(width, height, dst.data, &dI[0]);
+
+  cv::Mat bw2 = dst < 128;
+  cv::Mat labelImage2(bw2.size(), CV_16U);
+
+
+  cv::Mat output2;
+  cv::Mat centroids2;
+  cv::Mat stats2;
+  cv::connectedComponentsWithStats(bw2, labelImage2, stats2, centroids2, 8, CV_16U);
+
+
   // Label image (connected components)
   labels.clear();
-  Label(width, height, &tI[0], &lI[0], labels,
-        params.black_on_white ? 0 : 255 );
+  //Label(width, height, &tI[0], &lI[0], labels,
+  //    params.black_on_white ? 0 : 255);
+
+
+
+  /*cv::Mat input(h, w, cv::DataType<unsigned char>::type, &tI[0]);
+  cv::Mat bw = input < 128;
+  cv::Mat labelImage(bw.size(), CV_16U);
+
+
+  cv::Mat output;
+  cv::Mat centroids;
+  cv::Mat stats;
+
+  cv::connectedComponentsWithStats(bw, labelImage, stats, centroids, 8, CV_16U);*/
+  //std::vector<PixelClass> labels2;
+  for (int i = 1; i < stats2.size().height; i++)
+  {
+      //populate labels from stats
+      PixelClass current;
+
+      current.bbox.x1 = stats2.at<int>(i, cv::CC_STAT_LEFT);
+      current.bbox.y1 = stats2.at<int>(i, cv::CC_STAT_TOP);
+      current.bbox.x2 = current.bbox.x1 + stats2.at<int>(i, cv::CC_STAT_WIDTH) - 1;
+      current.bbox.y2 = current.bbox.y1 + stats2.at<int>(i, cv::CC_STAT_HEIGHT) - 1;
+      current.equiv = -1;
+      current.size = stats2.at<int32_t>(i, cv::CC_STAT_AREA);
+      labels.push_back(current);
+  }
+
+
+
 }
 
 }

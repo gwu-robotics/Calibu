@@ -41,7 +41,7 @@ struct Vertex
 {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     inline Vertex(size_t id, const Conic& c)
-        : id(id), conic(c), pc(c.center), pg(GRID_INVALID,GRID_INVALID), area(0.0), value(-1)
+        : id(id), conic(c), pc(c.center), pg(GRID_INVALID,GRID_INVALID), area(0.0), value(-1), pc_u(c.center_undistorted)
     {
     }
 
@@ -53,6 +53,7 @@ struct Vertex
     size_t id;
     Conic conic;
     Eigen::Vector2d pc;
+    Eigen::Vector3d pc_u;
     Eigen::Vector2i pg;
     std::vector<Triple> triples;
     std::set<Vertex*> neighbours;
@@ -62,9 +63,10 @@ struct Vertex
 
 struct Triple
 {
-    inline Triple(Vertex& o1, Vertex& c, Vertex& o2)
+    inline Triple(Vertex& o1, Vertex& c, Vertex& o2, Eigen::Vector2d angles = Eigen::Vector2d())
     {
       vs = {&o1, &c, &o2};
+      m_angles = angles;
     }
 
     Triple(const Triple& triple) = default;
@@ -104,6 +106,7 @@ struct Triple
 
     // Colinear sequence of vertices, v[0], v[1], v[2]. v[1] is center
   std::vector<Vertex*> vs;
+  Eigen::Vector2d m_angles;
 };
 
 inline bool operator==(const Vertex& lhs, const Vertex& rhs)
@@ -119,6 +122,11 @@ inline bool AreCollinear(const Triple& t1, const Triple& t2)
 inline double Distance(const Vertex& v1, const Vertex& v2)
 {
     return (v2.pc - v1.pc).norm();
+}
+
+inline double DistanceUndistorted(const Vertex& v1, const Vertex& v2)
+{
+    return (v2.pc_u - v1.pc_u).squaredNorm();
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Vertex& v)

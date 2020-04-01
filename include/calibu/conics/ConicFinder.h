@@ -47,12 +47,12 @@ struct ParamsConicFinder
     float conic_min_aspect;
 };
 
-CALIBU_EXPORT
-class ConicFinder
+
+class CALIBU_EXPORT ConicFinder
 {
 public:
     ConicFinder();
-    void Find(const ImageProcessing& imgs);
+    void Find(const ImageProcessing& imgs, const std::shared_ptr<calibu::CameraInterface<double>> camera = nullptr);
 
   inline const std::vector<Conic, Eigen::aligned_allocator<Conic> >&
   Conics() const {

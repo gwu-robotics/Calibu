@@ -26,8 +26,8 @@ if(BUILD_MATLAB)
   endif()
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+set(CMAKE_CXX_FLAGS "-std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" AND NOT ANDROID)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif()
 
@@ -118,11 +118,12 @@ SET(SOURCES
 ## Find required dependencies
 find_package( Eigen3 REQUIRED )
 find_package( Sophus REQUIRED )
-find_package( GLog REQUIRED )
+find_package( glog REQUIRED CONFIG)
+set(HAVE_GLOG 1)
+list( APPEND LINK_LIBS glog::glog )
 
-find_package(TinyXML2 REQUIRED)
-list(APPEND CALIBU_INC ${TinyXML2_INCLUDE_DIRS} )
-list(APPEND LINK_LIBS ${TinyXML2_LIBRARIES} )
+find_package(tinyxml2 REQUIRED CONFIG)
+list(APPEND LINK_LIBS tinyxml2 )
 
 
 ## Apply project include directories
@@ -139,7 +140,7 @@ list( APPEND USER_INC   ${Sophus_INCLUDE_DIRS} )
 ## Find optional dependencies
 
 # OpenCV is required for PNP methods and calibration application
-find_package( OpenCV REQUIRED core calib3d )
+find_package( OpenCV REQUIRED calib3d imgproc core )
 if( OpenCV_FOUND )
     set( HAVE_OPENCV 1 )
     list( APPEND LINK_LIBS  ${OpenCV_LIBS})
@@ -147,20 +148,6 @@ if( OpenCV_FOUND )
     list( APPEND HEADERS ${INC_DIR}/pose/Pnp.h ${INC_DIR}/pose/Tracker.h )
     list( APPEND SOURCES ${SRC_DIR}/pose/Pnp.cpp ${SRC_DIR}/pose/Tracker.cpp )
 endif()
-
-#######################################################
-## Setup and configure library
-## Generate symbol export helper header on MSVC
-IF(MSVC)
-    string(TOUPPER ${LIBRARY_NAME} LIBRARY_NAME_CAPS)
-    include(GenerateExportHeader)
-    GENERATE_EXPORT_HEADER( ${LIBRARY_NAME}
-        BASE_NAME ${LIBRARY_NAME_CAPS}
-        EXPORT_MACRO_NAME ${LIBRARY_NAME_CAPS}_EXPORT
-        EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/include/${LIBRARY_NAME}/${LIBRARY_NAME}_export.h"
-        STATIC_DEFINE ${LIBRARY_NAME_CAPS}_BUILT_AS_STATIC
-    )
-ENDIF()
 
 #######################################################
 ## Optionally create unit tests
@@ -194,6 +181,22 @@ endif()
 add_library( calibu ${SOURCES} )
 target_link_libraries( calibu ${LINK_LIBS} )
 
+#######################################################
+## Setup and configure library
+## Generate symbol export helper header on MSVC
+SET(EXPORT_HEADER)
+IF(MSVC)
+    SET(EXPORT_HEADER "${CMAKE_CURRENT_BINARY_DIR}/include/${LIBRARY_NAME}/${LIBRARY_NAME}_export.h")
+    string(TOUPPER ${LIBRARY_NAME} LIBRARY_NAME_CAPS)
+    include(GenerateExportHeader)
+    GENERATE_EXPORT_HEADER( ${LIBRARY_NAME}
+        BASE_NAME ${LIBRARY_NAME_CAPS}
+        EXPORT_MACRO_NAME ${LIBRARY_NAME_CAPS}_EXPORT
+        EXPORT_FILE_NAME ${EXPORT_HEADER}
+        STATIC_DEFINE ${LIBRARY_NAME_CAPS}_BUILT_AS_STATIC
+    )
+ENDIF()
+
 # install everything
 install_package(
     PKG_NAME Calibu
@@ -202,10 +205,11 @@ install_package(
     DESCRIPTION "Computer vision camera model library."
 #    INSTALL_HEADERS ${HEADERS}
     INSTALL_INCLUDE_DIR true
-    INSTALL_GENERATED_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/include/calibu/config.h
+    INSTALL_GENERATED_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/include/calibu/config.h ${EXPORT_HEADER}
     DESTINATION ${CMAKE_INSTALL_PREFIX}
-    INCLUDE_DIRS ${USER_INC}
+    INCLUDE_DIRS ${USER_INC} ${CMAKE_INSTALL_PREFIX}/include
     LINK_LIBS ${LINK_LIBS}
+    LINK_DIRS ${CMAKE_INSTALL_PREFIX}/lib
     )
 
 if( BUILD_APPLICATIONS )

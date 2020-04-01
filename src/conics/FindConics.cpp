@@ -158,7 +158,7 @@ void FindCandidateConicsFromLabels(
                     if( min_aspect < aspect && aspect < 1.0 / min_aspect )
                     {
                         const double density = (double)labels[i].size / (double)area;
-                        if( min_density <=  density )
+                        //if( min_density <=  density )
                         {
                             PixelClass candidate = labels[i];
                             candidate.bbox = r.Grow(2).Clamp(border,border,w-(1+border),h-(1+border));

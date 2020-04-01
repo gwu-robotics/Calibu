@@ -49,8 +49,8 @@ inline bool operator<(const Dist& lhs, const Dist& rhs) { return lhs.dist < rhs.
 struct ParamsGridDot
 {
     ParamsGridDot() :
-        max_line_dist_ratio(0.3),
-        max_norm_triple_area(0.03),
+        max_line_dist_ratio(0.4),
+        max_norm_triple_area(0.05),
         min_cross_area(1.5),
         max_cross_area(9.0),
         cross_radius_ratio(0.058),
@@ -65,8 +65,8 @@ struct ParamsGridDot
     double cross_line_ratio;
 };
 
-CALIBU_EXPORT
-class TargetGridDot
+
+class CALIBU_EXPORT TargetGridDot
         : public TargetInterface
 {
 public:
@@ -166,9 +166,9 @@ public:
     void Clear();
     void SetGrid(Vertex& v, const Eigen::Vector2i& g);
     bool Match(std::map<Eigen::Vector2i const, Vertex*,
-               std::less<Eigen::Vector2i>,
-               Eigen::aligned_allocator<std::pair<Eigen::Vector2i const, Vertex*> > >& obs,
-               const std::array<Eigen::MatrixXi,4>& PG);
+                std::less<Eigen::Vector2i>,
+                Eigen::aligned_allocator<std::pair<Eigen::Vector2i const, Vertex*> > >& obs,
+                const std::array<Eigen::MatrixXi,4>& PG);
 
     std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d> > tpts2d;
     std::vector<double> tpts2d_radius;
